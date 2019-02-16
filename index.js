@@ -1,8 +1,14 @@
+/*
+ * index.js
+ */
+
 const express = require('express');
 const app = express();
 const port = 3000;
+require('dotenv').load();
 
-// Add facilities route
-app.use(require('./routes/facilities'));
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Dan-Baba/Rate-my-Facilities#readme",
   "dependencies": {
+    "dotenv": "^6.2.0",
     "esn": "^1.0.6",
     "express": "^4.16.4"
   },
