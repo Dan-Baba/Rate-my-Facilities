@@ -19,5 +19,9 @@
   "homepage": "https://github.com/Dan-Baba/Rate-my-Facilities#readme",
   "dependencies": {
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.14.0",
+    "eslint-config-google": "^0.12.0"
   }
 }
