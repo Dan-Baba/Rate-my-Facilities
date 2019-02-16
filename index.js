@@ -1,6 +1,21 @@
 /*
  * index.js
  */
+const mysql = require('mysql');
+
+connection = mysql.createConnection({
+  host: '34.73.250.171',
+  user: 'root',
+  password: '',
+  database: 'rmf',
+});
+
+connection.connect();
+connection.query('SELECT * FROM facilities', function(error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is: ', results[0].placeID);
+});
+connection.end();
 
 const express = require('express');
 const app = express();
