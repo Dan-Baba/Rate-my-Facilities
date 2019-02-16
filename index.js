@@ -23,13 +23,6 @@ connection.query('SELECT * FROM facilities', function(error, results, fields) {
   console.log('The solution is: ', results[0].placeID);
 });
 connection.end();
-
-const express = require('express');
-const app = express();
-const port = 3000;
-const fetch = require('node-fetch');
-require('dotenv').load();
-
 app.use(require('./routes/facilities'));
 
 
