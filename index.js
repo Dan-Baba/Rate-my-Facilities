@@ -1,3 +1,6 @@
+/*
+ * index.js
+ */
 const mysql = require('mysql');
 
 connection = mysql.createConnection({
@@ -17,6 +20,7 @@ connection.end();
 const express = require('express');
 const app = express();
 const port = 3000;
+require('dotenv').load();
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

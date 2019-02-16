@@ -1,0 +1,12 @@
+{
+  "development": {
+    "clientId": "",
+    "clientSecret": ""
+  },
+  "qa": {
+
+  },
+  "production": {
+
+  }
+}
