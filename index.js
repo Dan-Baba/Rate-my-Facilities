@@ -24,9 +24,6 @@ connection.query('SELECT * FROM facilities', function(error, results, fields) {
 });
 connection.end();
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 const express = require('express');
 const app = express();
 const port = 3000;
