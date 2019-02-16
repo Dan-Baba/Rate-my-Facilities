@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Dan-Baba/Rate-my-Facilities/issues"
   },
-  "homepage": "https://github.com/Dan-Baba/Rate-my-Facilities#readme"
+  "homepage": "https://github.com/Dan-Baba/Rate-my-Facilities#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
