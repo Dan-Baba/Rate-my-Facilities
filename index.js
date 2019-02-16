@@ -4,6 +4,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const request = require('request');
 const mysql = require('mysql');
 require('dotenv').load();
 
@@ -39,6 +40,5 @@ request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?key='
   currBod = body.results;
   console.log(currBod);
 });
-
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
