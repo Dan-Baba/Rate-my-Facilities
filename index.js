@@ -8,7 +8,6 @@ const request = require('request');
 const mysql = require('mysql');
 require('dotenv').load();
 
-
 connection = mysql.createConnection({
   host: '34.73.250.171',
   user: 'root',
@@ -25,10 +24,6 @@ connection.query('SELECT * FROM facilities', function(error, results, fields) {
 });
 connection.end();
 
-app.get('/', (req, res) => {
-  res.send('' + result.placeID);
-});
-
 request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?key='
  + process.env.MY_API_KEY + '&location=43.084589,-77.674344&rankby=distance',
 {json: true}, (err, res, body) => {
@@ -40,5 +35,8 @@ request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?key='
   currBod = body.results;
   console.log(currBod);
 });
+
+app.use(require('./routes/auth'));
+app.use(require('./routes/facilities'));
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
