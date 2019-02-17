@@ -15,18 +15,13 @@ connection = mysql.createConnection({
   password: 'db_test',
   database: 'rmf',
 });
-
 connection.connect();
-result = 0;
-connection.query('SELECT * FROM facilities', function(error, results, fields) {
-  if (error) throw error;
-  result = results[0];
-  console.log('The solution is: ', results[0].placeID);
-});
-connection.end();
 
 app.use(bodyParser.json());
-app.use(require('./routes/auth'));
+
+const authRouter = require('./routes/auth')(connection);
+app.use(authRouter);
+
 app.use(require('./routes/facilities'));
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
