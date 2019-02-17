@@ -6,5 +6,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'rate-my-facilities';
+  title: string = 'Rate my Facilities!';
+  currentPosition;
+  
+  ngOnInit() {
+    navigator.geolocation.getCurrentPosition(position => {  
+      console.log(position);  
+      // in your case
+      this.currentPosition = position.coords;
+    });
+  }
 }
