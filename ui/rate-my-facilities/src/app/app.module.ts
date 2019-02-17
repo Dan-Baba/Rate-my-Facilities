@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { AgmCoreModule } from '@agm/core';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { HttpClientModule } from '@angular/common/http';
+import { RateMyFacilitiesService } from './services/rate-my-facilities.service';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     }),
     AgmSnazzyInfoWindowModule
   ],
-  providers: [],
+  providers: [RateMyFacilitiesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
