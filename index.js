@@ -22,7 +22,8 @@ app.use(bodyParser.json());
 const authRouter = require('./routes/auth')(connection);
 app.use(authRouter);
 
-app.use(require('./routes/facilities'));
+const facilityRouter = require('./routes/facilities')(connection);
+app.use(facilityRouter);
 
 const json = '{"result":true, "count":42}';
 obj = JSON.parse(json);
