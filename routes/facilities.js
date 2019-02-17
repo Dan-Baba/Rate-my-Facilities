@@ -194,10 +194,11 @@ const routes = function(connection) {
           console.log(err.message);
         }
         
-        bigList.push({id: req.data[i].place_id,
+        bigList.push({place_id: req.data[i].place_id,
           name: req.data[i].name,
           lat: req.data[i].geometry.location.lat,
-          lng: req.data[i].geometry.location.lng});
+          lng: req.data[i].geometry.location.lng,
+          rr_id: req.data[i].rr_id});
       }
       req.data = bigList;
       
