@@ -2,6 +2,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
+const generateToken = (results, response) => {
+  const token = jwt.sign({ username: results[0].username, email: results[0].email },
+      'brick-hack-private-key', {expiresIn: '1d'});
+  console.log(token);
+  response.send({token: token});
+};
+
 const routes = function(connection) {
   const validatePassword = (req, res, next) => {
     if (req.body.password.length < 8) {
@@ -59,7 +66,7 @@ const routes = function(connection) {
                 if (error) throw error;
               });
         });
-        res.send('POST completed');
+        generateToken(results, res);
       });
   
   authRouter.post('/login', (req, res) => {
@@ -83,10 +90,7 @@ const routes = function(connection) {
               res.send(unauthorizedMSG);
               return;
             }
-            const token = jwt.sign({username: results[0].username, email: results[0].email},
-                'brick-hack-private-key', {expiresIn: '1d'});
-            console.log(token);
-            res.send({token: token});
+            generateToken(results, res);
           });
         });
   });
