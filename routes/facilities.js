@@ -157,7 +157,7 @@ const routes = function(connection) {
           console.log(err.message);
         }
         
-        bigList.push({lat: req.data[i].geometry.location.lat, lng: req.data[i].geometry.location.lng});
+        bigList.push({name: req.data[i].name, lat: req.data[i].geometry.location.lat, lng: req.data[i].geometry.location.lng});
       }
       req.data = bigList;
       
