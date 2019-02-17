@@ -33,4 +33,25 @@ export class AppComponent {
   onRatingChange($event, location) {
     console.log($event);
   }
+
+  getRatingsText(location) {
+    let countAvailable = 0;
+    if (location.GNrating > 0) {
+      countAvailable++;
+    }
+    if (location.Frating > 0) {
+      countAvailable++;
+    }
+    if (location.Mrating > 0) {
+      countAvailable++;
+    }
+
+    if (countAvailable > 1) {
+      return 'Current Ratings';
+    } else if (countAvailable === 1) {
+      return 'Current Rating';
+    } else {
+      return null;
+    }
+  }
 }
