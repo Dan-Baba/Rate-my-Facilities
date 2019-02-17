@@ -174,9 +174,8 @@ const routes = function(connection) {
   };
 
 
-
   // Routes
-  facilityRouter.get('/:latitude/:longitude', asyncFunction, buildListFunction, (req, res) => {
+  facilityRouter.get('/:latitude/:longitude', asyncFunction, (req, res) => {
     res.send(req.data);
   });
 
