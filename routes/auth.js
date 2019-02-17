@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 const routes = function(connection) {
@@ -63,7 +64,7 @@ const routes = function(connection) {
   
   authRouter.post('/login', (req, res) => {
     const unauthorizedMSG = 'Your username or password is incorrect.';
-    connection.query('SELECT password FROM users WHERE username = ?',
+    connection.query('SELECT * FROM users WHERE username = ?',
         [req.body.username], function(error, results, fields) {
           if (error) throw error;
           if (results.length == 0) {
@@ -82,7 +83,10 @@ const routes = function(connection) {
               res.send(unauthorizedMSG);
               return;
             }
-            res.send('LOGIN Successful');
+            const token = jwt.sign({username: results[0].username, email: results[0].email},
+                'brick-hack-private-key', {expiresIn: '1d'});
+            console.log(token);
+            res.send({token: token});
           });
         });
   });
