@@ -18,6 +18,20 @@ connection = mysql.createConnection({
 connection.connect();
 
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(' ');
+    const profile = jwt.verify(token[1], 'brick-hack-private-key');
+    if (profile.exp * 1000 > new Date()) {
+      req.profile = profile;
+    }
+  }
+  next();
+});
+
+app.get('/test', (req, res) => {
+  console.log(req.profile);
+});
 
 const authRouter = require('./routes/auth')(connection);
 app.use(authRouter);
@@ -25,15 +39,6 @@ app.use(authRouter);
 const facilityRouter = require('./routes/facilities')(connection);
 app.use(facilityRouter);
 
-const json = '{"result":true, "count":42}';
-obj = JSON.parse(json);
-
-console.log(obj.count);
-console.log(obj.result);
-app.put('/test', (req, resp) => {
-      resp.send('Derp');
-    }
-);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
