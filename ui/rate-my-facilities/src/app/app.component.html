@@ -4,6 +4,6 @@
       <agm-info-window>This is YOU</agm-info-window>
   </agm-marker>
   <agm-marker *ngFor="let location of locations" [latitude]="location.lat" [longitude]="location.lng">
-    <agm-info-window></agm-info-window>
+    <agm-info-window>{{location.name}}</agm-info-window>
   </agm-marker>
 </agm-map>
