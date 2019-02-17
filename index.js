@@ -5,9 +5,10 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const port = 3000;
-
 const mysql = require('mysql');
 require('dotenv').load();
+const passport = require('passport');
+require('./passport');
 
 connection = mysql.createConnection({
   host: '34.73.250.171',
@@ -29,5 +30,10 @@ obj = JSON.parse(json);
 
 console.log(obj.count);
 console.log(obj.result);
+app.put('/test', passport.authenticate('local', {session: false}),
+    (req, resp) => {
+      resp.send('Derp');
+    }
+);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
