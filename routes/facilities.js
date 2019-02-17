@@ -24,8 +24,9 @@ const buildListFunction = async (req, res, next) => {
 };
 
 // Routes
-router.get('/:latitude/:longitude', asyncFunction, buildListFunction, (req, res) => {
-  res.send(req.data);
-});
+router.get('/:latitude/:longitude', asyncFunction,
+    buildListFunction, (req, res) => {
+      res.send(req.data);
+    });
 
 module.exports = router;
