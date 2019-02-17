@@ -137,7 +137,7 @@ const routes = function(connection) {
       if (err) throw err;
       console.log(result);
 
-      let newString = '';
+      let bigList = [];
       let i;
       for (i = 0; i < req.data.length; i++) {
         try {
@@ -156,26 +156,18 @@ const routes = function(connection) {
         } catch (err) {
           console.log(err.message);
         }
-  
-        newString = newString + 'PLACE ID: ' +
-          req.data[i].place_id + '   NAME: ' + req.data[i].name + '\n' +
-          'TYPES: ';
-        let j;
-        for (j = 0; j < req.data[i].types.length; j++) {
-          newString = newString + req.data[i].types[j] + ' ';
-        }
-        newString = newString + '\n' + 'LATITUDE: ' + req.data[i].geometry.location.lat +
-          '   LONGITUDE: ' + req.data[i].geometry.location.lng + '\n\n';
+        
+        bigList.push({lat: req.data[i].geometry.location.lat, lng: req.data[i].geometry.location.lng});
       }
-      req.data = newString;
+      req.data = bigList;
+      
       next();
 
     });
   };
 
-
   // Routes
-  facilityRouter.get('/:latitude/:longitude', asyncFunction, (req, res) => {
+  facilityRouter.get('/:latitude/:longitude', asyncFunction, buildListFunction, (req, res) => {
     res.send(req.data);
   });
 
