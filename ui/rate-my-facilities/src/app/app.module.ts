@@ -7,6 +7,7 @@ import { AgmCoreModule } from '@agm/core';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { HttpClientModule } from '@angular/common/http';
 import { RateMyFacilitiesService } from './services/rate-my-facilities.service';
+import { StarRatingModule } from 'angular-star-rating';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { RateMyFacilitiesService } from './services/rate-my-facilities.service';
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAKdSyvTtNqf2x5_Kn4itmg7QDbgO8Atlk'
     }),
-    AgmSnazzyInfoWindowModule
+    AgmSnazzyInfoWindowModule,
+    StarRatingModule.forRoot()
   ],
   providers: [RateMyFacilitiesService],
   bootstrap: [AppComponent]

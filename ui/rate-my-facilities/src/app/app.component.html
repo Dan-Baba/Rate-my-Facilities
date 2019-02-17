@@ -1,9 +1,17 @@
 <p style="text-align:center;"><img src='../assets/image/logo.png' width = 20%></p>
 <agm-map [zoom]="18" [latitude]="currentPosition?.latitude" [longitude]="currentPosition?.longitude">
-  <agm-marker [latitude]="currentPosition?.latitude" [longitude]="currentPosition?.longitude">
-      <agm-info-window>This is YOU</agm-info-window>
-  </agm-marker>
+  <!-- <agm-marker [latitude]="currentPosition?.latitude" [longitude]="currentPosition?.longitude">
+    <agm-snazzy-info-window [maxWidth]="200" [closeWhenOthersOpen]="true" [isOpen]="true">
+      <ng-template>
+        My first Snazzy Info Window!
+      </ng-template>
+    </agm-snazzy-info-window>
+  </agm-marker> -->
   <agm-marker *ngFor="let location of locations" [latitude]="location.lat" [longitude]="location.lng">
-    <agm-info-window>{{location.name}}</agm-info-window>
+    <agm-info-window>
+      <h5>{{location.name}}</h5><br />
+      <star-rating [starType]="'svg'" [rating]="2.63" [disabled]="true" labelText="Current Rating"></star-rating>
+      <star-rating [starType]="'svg'" [rating]="0"></star-rating>
+    </agm-info-window>
   </agm-marker>
 </agm-map>
