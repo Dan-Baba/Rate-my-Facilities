@@ -10,8 +10,8 @@
   <agm-marker *ngFor="let location of locations" [latitude]="location.lat" [longitude]="location.lng">
     <agm-info-window>
       <h5>{{location.name}}</h5><br />
-      <star-rating [starType]="'svg'" [rating]="2.63" [disabled]="true" labelText="Current Rating"></star-rating>
-      <star-rating [starType]="'svg'" [rating]="0"></star-rating>
+      <star-rating [starType]="'svg'" [rating]="2.63" [disabled]="true" [step]="0.5" [readOnly]="true" labelText="Current Rating"></star-rating>
+      <star-rating [starType]="'svg'" [rating]="0" [step]="0.5" labelText="Your Rating" (ratingChange)="onRatingChange($event, location.name)"></star-rating>
     </agm-info-window>
   </agm-marker>
 </agm-map>
