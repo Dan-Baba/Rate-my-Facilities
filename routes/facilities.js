@@ -17,7 +17,14 @@ const buildListFunction = async (req, res, next) => {
   let i;
   for (i = 0; i < req.data.length; i++) {
     newString = newString + 'PLACE ID: ' +
-      req.data[i].place_id + '        NAME: ' + req.data[i].name + '\n';
+      req.data[i].place_id + '   NAME: ' + req.data[i].name + '\n' +
+      'TYPES: ';
+    let j;
+    for (j = 0; j < req.data[i].types.length; j++) {
+      newString = newString + req.data[i].types[j] + ' ';
+    }
+    newString = newString + '\n' + 'LATITUDE: ' + req.data[i].geometry.location.lat +
+      '   LONGITUDE: ' + req.data[i].geometry.location.lng + '\n\n';
   }
   req.data = newString;
   next();
