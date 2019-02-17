@@ -10,7 +10,10 @@
   <agm-marker *ngFor="let location of locations" [latitude]="location.lat" [longitude]="location.lng">
     <agm-info-window>
       <h5>{{location.name}}</h5><br />
-      <star-rating [starType]="'svg'" [rating]="2.63" [disabled]="true" [step]="0.5" [readOnly]="true" labelText="Current Rating"></star-rating>
+      <h5>{{ getRatingsText(location) }}</h5>
+      <star-rating *ngIf="location.GNrating > 0" [starType]="'svg'" [rating]="location.GNrating" [disabled]="true" [readOnly]="true" labelText="Current Gender Neutral Rating"></star-rating>
+      <star-rating *ngIf="location.Frating > 0" [starType]="'svg'" [rating]="location.Frating" [disabled]="true" [readOnly]="true" labelText="Current Female Rating"></star-rating>
+      <star-rating *ngIf="location.Mrating > 0" [starType]="'svg'" [rating]="location.Mrating" [disabled]="true" [readOnly]="true" labelText="Current Male Rating"></star-rating>
       <star-rating [starType]="'svg'" [rating]="0" [step]="0.5" labelText="Your Rating" (ratingChange)="onRatingChange($event, location.name)"></star-rating>
     </agm-info-window>
   </agm-marker>
