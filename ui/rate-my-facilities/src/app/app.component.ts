@@ -29,4 +29,8 @@ export class AppComponent {
       this.locations = data;
     });
   }
+
+  onRatingChange($event, location) {
+    console.log($event);
+  }
 }
