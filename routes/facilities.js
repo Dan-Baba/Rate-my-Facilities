@@ -1,3 +1,9 @@
+const RestroomEnum = {
+  GENDER_NEUTRAL: 0,
+  MALE: 1,
+  FEMALE: 2,
+};
+
 /*
  * routes
  */
@@ -16,18 +22,116 @@ const routes = function(connection) {
     next();
   };
 
-  const buildListFunction = async (req, res, next) => {
-    /*
-    connection.query('SELECT place_id FROM facilities', (err, result, fields) => {
-      if (err) throw err;
-      console.log(result);
-    });
+  // '/rate/:username/:rr_id/:place_id/:clean_rating/:bathroom_type'
+  const rateRRFunction = async (req, res, next) => {
+    await connection.query('SELECT * FROM rr_ratings WHERE username = ? AND rr_id = ?',
+    [req.param('username'), req.param('rr_id')], (err, result, fields) => {
+      if (result.length === 1) {
+        // It's a repeat vote
+        const oldType = result[0].type;
+        // Step 1: Update the entry in rr_ratings
+        connection.query('UPDATE rr_ratings SET p_clean_rating = ' + req.param('p_clean_rating')
+        + ', type = ' + req.param('type') + ' WHERE username = \'' + req.param('username') +
+        '\' AND rr_id = ' + req.param('rr_id'), (error, results, fields) => {
+          // Step 2: update the correct entry in restrooms
+          // s2p1: get all rr_ratings entries that match the new restroom vote
+          connection.query('SELECT * FROM rr_ratings WHERE rr_id = ' + req.param('rr_id') +
+          ' AND type = ' + req.param('type'), (err, resultos, fields) => {
+            let sum = 0;
+            let i;
+            for (i = 0; i < resultos.length; i++) {
+              sum = sum + resultos[i].p_clean_rating;
+            }
+            // s2p2: update the restrooms entry
+            const count = resultos.length;
+            connection.query('UPDATE restrooms SET clean_rating = ' + (sum / count) +
+            ' WHERE rr_id = ' + req.param('rr_id') + ' AND type = ' + req.param('type'),
+            (error, resultas, fields) => {
+              if (error) console.log(error.message);
+              else {
+                // No reviews yet for the restroom!
+                if (resultas.affectedRows === 0) {
+                  connection.query('INSERT INTO restrooms (rr_id, place_id, clean_rating, type) VALUES (?, ?, ?, ?)',
+                  [req.param('rr_id'), req.param('place_id'), req.param('p_clean_rating'), req.param('type')],
+                  (err, result) => {
+                    if (err) console.log(err.message);
+                  });
+                }
+                console.log('RECORD UPDATED IN restrooms rr_id ' + req.param('rr_id') + ':   clean rating -> '
+                + (sum / count));
+              }
+            });
+          });
+        });
 
-    connection.query('INSERT INTO facilities (place_id) VALUES (\'2\')', (err, result) => {
-      if (err) throw err;
-      console.log('1 record inserted: facility with id of \'2\'');
+        // Step 3: Update the entry that had one of its "children" in rr_ratings deleted
+        // s3p1 get all rr_ratings entries that match the old restroom vote
+        connection.query('SELECT * FROM rr_ratings WHERE rr_id = ' + req.param('rr_id') +
+          ' AND type = ' + oldType, (err, resultis, fields) => {
+          let sum = 0;
+          let i;
+          for (i = 0; i < resultis.length; i++) {
+            sum = sum + resultis[i].p_clean_rating;
+          }
+          // s3p2 update the restrooms entry
+          const count = resultis.length;
+          connection.query('UPDATE restrooms SET clean_rating = ' + (sum / count) +
+          ' WHERE rr_id = ' + req.param('rr_id') + ' AND type = ' + oldType,
+          (error, resultisimos, fields) => {
+            if (error) console.log(error.message);
+            else {
+              console.log('RECORD UPDATED IN restrooms rr_id ' + req.param('rr_id') + ':   clean rating -> '
+              + (sum / count));
+            }
+          });
+        });
+
+      } else {
+        // It's a new vote
+        connection.query('INSERT INTO rr_ratings (username, rr_id, p_clean_rating, type) VALUES (?, ?, ?, ?)',
+          [req.param('username'), req.param('rr_id'), req.param('p_clean_rating'), req.param('type')],
+          (err, result) => {
+          if (err) {
+            console.log(err.message);
+          } else {
+            console.log('RECORD INSERTED INTO rr_ratings:  ' + req.param('username')
+            + ', ' + req.param('rr_id'));
+          }
+
+          connection.query('SELECT * FROM rr_ratings WHERE rr_id = ' + req.param('rr_id') +
+          ' AND type = ' + req.param('type'), (err, result, fields) => {
+            let sum = 0;
+            let i;
+            for (i = 0; i < result.length; i++) {
+              sum = sum + result[i].p_clean_rating;
+            }
+            const count = result.length;
+            connection.query('UPDATE restrooms SET clean_rating = ' + (sum / count) +
+            ' WHERE rr_id = ' + req.param('rr_id') + ' AND type = ' + req.param('type'),
+            (error, results, fields) => {
+              if (error) console.log(error.message);
+              else {
+                // No reviews yet for the restroom!
+                if (results.affectedRows === 0) {
+                  connection.query('INSERT INTO restrooms (rr_id, place_id, clean_rating, type) VALUES (?, ?, ?, ?)',
+                  [req.param('rr_id'), req.param('place_id'), req.param('p_clean_rating'), req.param('type')],
+                  (err, result) => {
+                    if (err) console.log(err.message);
+                  });
+                }
+                console.log('RECORD UPDATED IN restrooms rr_id ' + req.param('rr_id') + ':   clean rating -> '
+                + (sum / count));
+              }
+            });
+          });
+        });
+      }
+        
+      next();
     });
-    */
+  };
+
+  const buildListFunction = async (req, res, next) => {
 
     await connection.query('SELECT place_id FROM facilities', (err, result, fields) => {
       if (err) throw err;
@@ -44,8 +148,7 @@ const routes = function(connection) {
               req.data[i].place_id +'\')', (err, result) => {
               if (err) {
                 console.log(err.message);
-              }
-              else {
+              } else {
                 console.log('RECORD INSERTED INTO facilities:  ' + req.data[i].place_id);
               }
             });
@@ -70,8 +173,15 @@ const routes = function(connection) {
     });
   };
 
+
+
   // Routes
   facilityRouter.get('/:latitude/:longitude', asyncFunction, buildListFunction, (req, res) => {
+    res.send(req.data);
+  });
+
+  facilityRouter.get('/rate/:username/:rr_id/:place_id/:p_clean_rating/:type',
+    rateRRFunction, (req, res) => {
     res.send(req.data);
   });
 
