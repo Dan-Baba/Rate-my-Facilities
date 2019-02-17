@@ -144,7 +144,7 @@ const routes = function(connection) {
       for (i = 0; i < req.data.length; i++) {
         for (j = 0; j < result.length; j++) {
           for (k = 0; k < 3; k++) {
-            if (req.data[i].id == result[j].place_id && k === result[j].type) {
+            if (req.data[i].place_id == result[j].place_id && k === result[j].type) {
               if (k === 0) {
                 req.data[i].GNrating = result[j].clean_rating;
               } else if (k === 1) {
@@ -153,11 +153,11 @@ const routes = function(connection) {
                 req.data[i].Frating = result[j].clean_rating;
               }
             } else {
-              if (k === 0) {
+              if (k === 0 && !req.data[i].GNrating) {
                 req.data[i].GNrating = -1.0;
-              } else if (k === 1) {
+              } else if (k === 1 && !req.data[i].Mrating) {
                 req.data[i].Mrating = -1.0;
-              } else {
+              } else if (!req.data[i].Frating) {
                 req.data[i].Frating = -1.0;
               }
             }
