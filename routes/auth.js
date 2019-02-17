@@ -48,7 +48,6 @@ const routes = function(connection) {
 
   authRouter.post('/register', validatePassword, validateUsername,
       validateEmail, (req, res) => {
-        console.log(req.body.username);
         res.send('oof');
       });
   return authRouter;
