@@ -24,7 +24,6 @@ connection.query('SELECT * FROM facilities', function(error, results, fields) {
   console.log('The solution is: ', results[0].placeID);
 });
 connection.end();
-app.use(require('./routes/facilities'));
 
 
 const asyncFunction = async () => {
