@@ -42,13 +42,6 @@ const asyncFunction = async () => {
   return response;
 };
 
-/**
- * hasBod
- * @param bod the body
- */
-function hasBod(bod) {
-  console.log(bod);
-}
 
 request('https://maps.googleapis.com/maps/api/place/nearbysearch/json?key='
  + process.env.MY_API_KEY + '&location=43.084589,-77.674344&rankby=distance',
