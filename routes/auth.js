@@ -59,8 +59,33 @@ const routes = function(connection) {
               });
         });
         res.send('POST completed');
-        // TODO: Web Tokens to autosign in
       });
+  
+  authRouter.post('/login', (req, res) => {
+    const unauthorizedMSG = 'Your username or password is incorrect.';
+    connection.query('SELECT password FROM users WHERE username = ?',
+        [req.body.username], function(error, results, fields) {
+          if (error) throw error;
+          if (results.length == 0) {
+            res.status(403);
+            res.send(unauthorizedMSG);
+            return;
+          }
+
+          bcrypt.compare(req.body.password, results[0].password, function(err, resb) {
+            if (err) throw err;
+            console.log(resb);
+            if (resb) {
+              // TOKEN
+            } else {
+              res.status(403);
+              res.send(unauthorizedMSG);
+              return;
+            }
+            res.send('LOGIN Successful');
+          });
+        });
+  });
   return authRouter;
 };
 
