@@ -131,6 +131,43 @@ const routes = function(connection) {
     });
   };
 
+  const getRatingsFunction = async (req, res, next) => {
+
+    connection.query('SELECT place_id, rr_id, clean_rating, type FROM facilities ' +
+      'NATURAL JOIN restrooms', (err, result, fields) => {
+      if (err) console.log(err.message);
+      console.log(result);
+
+      let i = 0;
+      let j = 0;
+      let k = 0;
+      for (i = 0; i < req.data.length; i++) {
+        for (j = 0; j < result.length; j++) {
+          for (k = 0; k < 3; k++) {
+            if (req.data[i].id == result[j].place_id && k === result[j].type) {
+              if (k === 0) {
+                req.data[i].GNrating = result[j].clean_rating;
+              } else if (k === 1) {
+                req.data[i].Mrating = result[j].clean_rating;
+              } else {
+                req.data[i].Frating = result[j].clean_rating;
+              }
+            } else {
+              if (k === 0) {
+                req.data[i].GNrating = -1.0;
+              } else if (k === 1) {
+                req.data[i].Mrating = -1.0;
+              } else {
+                req.data[i].Frating = -1.0;
+              }
+            }
+          }
+        }
+      }
+      next();
+    });
+  };
+
   const buildListFunction = async (req, res, next) => {
 
     await connection.query('SELECT place_id FROM facilities', (err, result, fields) => {
@@ -157,7 +194,10 @@ const routes = function(connection) {
           console.log(err.message);
         }
         
-        bigList.push({name: req.data[i].name, lat: req.data[i].geometry.location.lat, lng: req.data[i].geometry.location.lng});
+        bigList.push({id: req.data[i].place_id,
+          name: req.data[i].name,
+          lat: req.data[i].geometry.location.lat,
+          lng: req.data[i].geometry.location.lng});
       }
       req.data = bigList;
       
@@ -167,7 +207,8 @@ const routes = function(connection) {
   };
 
   // Routes
-  facilityRouter.get('/:latitude/:longitude', asyncFunction, buildListFunction, (req, res) => {
+  facilityRouter.get('/:latitude/:longitude', asyncFunction, buildListFunction, getRatingsFunction,
+   (req, res) => {
     res.send(req.data);
   });
 
