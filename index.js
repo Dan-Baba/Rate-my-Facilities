@@ -29,4 +29,10 @@ app.use(bodyParser.json());
 app.use(require('./routes/auth'));
 app.use(require('./routes/facilities'));
 
+const json = '{"result":true, "count":42}';
+obj = JSON.parse(json);
+
+console.log(obj.count);
+console.log(obj.result);
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
