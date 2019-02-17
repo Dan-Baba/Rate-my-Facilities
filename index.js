@@ -6,9 +6,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const mysql = require('mysql');
+const jwt = require('jsonwebtoken');
 require('dotenv').load();
-const passport = require('passport');
-require('./passport');
 
 connection = mysql.createConnection({
   host: '34.73.250.171',
@@ -19,6 +18,20 @@ connection = mysql.createConnection({
 connection.connect();
 
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(' ');
+    const profile = jwt.verify(token[1], 'brick-hack-private-key');
+    if (profile.exp * 1000 > new Date()) {
+      req.profile = profile;
+    }
+  }
+  next();
+});
+
+app.get('/test', (req, res) => {
+  console.log(req.profile);
+});
 
 const authRouter = require('./routes/auth')(connection);
 app.use(authRouter);
@@ -26,15 +39,6 @@ app.use(authRouter);
 const facilityRouter = require('./routes/facilities')(connection);
 app.use(facilityRouter);
 
-const json = '{"result":true, "count":42}';
-obj = JSON.parse(json);
-
-console.log(obj.count);
-console.log(obj.result);
-app.put('/test', passport.authenticate('local', {session: false}),
-    (req, resp) => {
-      resp.send('Derp');
-    }
-);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+

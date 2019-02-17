@@ -1,5 +1,13 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const saltRounds = 10;
+
+const generateToken = (results, response) => {
+  const token = jwt.sign({ username: results[0].username, email: results[0].email },
+      'brick-hack-private-key', {expiresIn: '1d'});
+  console.log(token);
+  response.send({token: token});
+};
 
 const routes = function(connection) {
   const validatePassword = (req, res, next) => {
@@ -58,9 +66,34 @@ const routes = function(connection) {
                 if (error) throw error;
               });
         });
-        res.send('POST completed');
-        // TODO: Web Tokens to autosign in
+        generateToken(results, res);
       });
+  
+  authRouter.post('/login', (req, res) => {
+    const unauthorizedMSG = 'Your username or password is incorrect.';
+    connection.query('SELECT * FROM users WHERE username = ?',
+        [req.body.username], function(error, results, fields) {
+          if (error) throw error;
+          if (results.length == 0) {
+            res.status(403);
+            res.send(unauthorizedMSG);
+            return;
+          }
+
+          bcrypt.compare(req.body.password, results[0].password, function(err, resb) {
+            if (err) throw err;
+            console.log(resb);
+            if (resb) {
+              // TOKEN
+            } else {
+              res.status(403);
+              res.send(unauthorizedMSG);
+              return;
+            }
+            generateToken(results, res);
+          });
+        });
+  });
   return authRouter;
 };
 
