@@ -1,17 +1,14 @@
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
+var JwtStrategy = require('passport-jwt').Strategy,
+  ExtractJwt = require('passport-jwt').ExtractJwt;
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
-  }
-));
+module.exports = passport.use(new JwtStrategy({jwtFromRequest: (req, res, next) => {
+  console.log(req);
+  const authorization = req.get('authorization');
+  const token = authorization.split('Bearer ')[1];
+  next();
+}, secretOrKey: 'brick-hack-secret',
+issuer: 'accounts.rate-my-facilities', audience: 'rate-my-facilities.com'}, function (jwt_payload, done) {
+  console.log(jwt_payload);
+}));
