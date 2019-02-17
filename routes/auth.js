@@ -1,3 +1,6 @@
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const routes = function(connection) {
   const validatePassword = (req, res, next) => {
     if (req.body.password.length < 8) {
@@ -14,7 +17,7 @@ const routes = function(connection) {
       res.send('Username is too short');
       return;
     }
-    connection.query('SELECT ? FROM users', [req.body.username],
+    connection.query('SELECT * FROM users WHERE username = ?', [req.body.username],
         function(error, results, fields) {
           if (error) throw error;
           if (results.length != 0) {
@@ -22,8 +25,8 @@ const routes = function(connection) {
             res.send('Username already exists');
             return;
           };
+          next();
         });
-    next();
   };
 
   const validateEmail = (req, res, next) => {
@@ -41,14 +44,22 @@ const routes = function(connection) {
             res.send('User with entered email already exists');
             return;
           };
+          next();
         });
-    next();
   };
   authRouter = require('express').Router();
 
-  authRouter.post('/register', validatePassword, validateUsername,
-      validateEmail, (req, res) => {
-        res.send('oof');
+  authRouter.post('/register', validateEmail, validateUsername,
+      validatePassword, (req, res) => {
+        bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+          if (err) throw err;
+          connection.query('INSERT INTO users(username, password, email) VALUES(?, ?, ?)',
+              [req.body.username, hash, req.body.email], function(error, results, fields) {
+                if (error) throw error;
+              });
+        });
+        res.send('POST completed');
+        // TODO: Web Tokens to autosign in
       });
   return authRouter;
 };
