@@ -196,7 +196,6 @@ const routes = function(connection) {
   };
 
   const buildListFunction = async (req, res, next) => {
-
     await connection.query('SELECT place_id FROM facilities', (err, result, fields) => {
       if (err) throw err;
       console.log(result);
@@ -210,10 +209,13 @@ const routes = function(connection) {
             result.push(result.indexOf(req.data[i].place_id));
             connection.query('INSERT INTO facilities (place_id) VALUES (\'' +
               req.data[i].place_id +'\')', (err, result) => {
+              // TODO: This piece of code is janky and inconsistent, indexing acts weird
               if (err) {
                 console.log(err.message);
               } else {
-                console.log('RECORD INSERTED INTO facilities:  ' + req.data[i].place_id);
+                if (req.data[i]) {
+                  console.log('RECORD INSERTED INTO facilities:  ' + req.data[i].place_id);
+                }
               }
             });
           }
@@ -230,7 +232,6 @@ const routes = function(connection) {
       req.data = bigList;
       
       next();
-
     });
   };
 

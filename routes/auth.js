@@ -84,13 +84,12 @@ const routes = function(connection) {
             if (err) throw err;
             console.log(resb);
             if (resb) {
-              // TOKEN
+              generateToken(results, res);
             } else {
               res.status(403);
               res.send(unauthorizedMSG);
               return;
             }
-            generateToken(results, res);
           });
         });
   });
