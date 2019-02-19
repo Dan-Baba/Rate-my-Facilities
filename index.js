@@ -7,20 +7,31 @@ const app = express();
 const port = 3000;
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 require('dotenv').load();
+
+
+const sca = fs.readFileSync(__dirname + '/server-ca.pem');
+const crt = fs.readFileSync(__dirname + '/client-cert.pem');
+const pkey = fs.readFileSync(__dirname + '/client-key.pem');
 
 connection = mysql.createConnection({
   host: '34.73.250.171',
-  user: 'root',
-  password: 'db_test',
+  user: 'jdfmain',
+  password: '$mf_db',
   database: 'rmf',
+  ssl: {
+    ca: sca,
+    key: pkey,
+    cert: crt,
+  },
 });
 connection.connect();
 
 app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-  res.header("Access-Control-Allow-Methods", "GET, POST","PUT");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT');
   next();
 });
 
