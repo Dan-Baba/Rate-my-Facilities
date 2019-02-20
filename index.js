@@ -26,7 +26,13 @@ connection = mysql.createConnection({
     cert: crt,
   },
 });
-connection.connect();
+connection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to database: ' + err.stack);
+    process.exit(1);
+    return;
+  }
+});
 
 app.all('/*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
