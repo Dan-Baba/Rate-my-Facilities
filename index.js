@@ -12,15 +12,19 @@ const fs = require('fs');
 const http = require('http');
 require('dotenv').load();
 
+var sca;
+var crt;
+var pkey;
 
-if (fs.existsSync('/certs/server-ca.pem')) {
-  const sca = fs.readFileSync(__dirname + '/certs/server-ca.pem');
-  const crt = fs.readFileSync(__dirname + '/certs/client-cert.pem');
-  const pkey = fs.readFileSync(__dirname + '/certs/client-key.pem');
+
+if (fs.existsSync(__dirname + '/certs/server-ca.pem')) {
+  sca = fs.readFileSync(__dirname + '/certs/server-ca.pem');
+  crt = fs.readFileSync(__dirname + '/certs/client-cert.pem');
+  pkey = fs.readFileSync(__dirname + '/certs/client-key.pem');
 } else {
-  const sca = process.env.SERVER_CA;
-  const crt = process.env.CLIENT_CERT;
-  const pkey = process.env.CLIENT_KEY;
+  sca = process.env.SERVER_CA;
+  crt = process.env.CLIENT_CERT;
+  pkey = process.env.CLIENT_KEY;
 }
 
 connection = mysql.createConnection({
