@@ -12,20 +12,9 @@ const fs = require('fs');
 const http = require('http');
 require('dotenv').load();
 
-var sca;
-var crt;
-var pkey;
-
-
-if (fs.existsSync(__dirname + '/certs/server-ca.pem')) {
-  sca = fs.readFileSync(__dirname + '/certs/server-ca.pem');
-  crt = fs.readFileSync(__dirname + '/certs/client-cert.pem');
-  pkey = fs.readFileSync(__dirname + '/certs/client-key.pem');
-} else {
-  sca = process.env.SERVER_CA;
-  crt = process.env.CLIENT_CERT;
-  pkey = process.env.CLIENT_KEY;
-}
+const sca = process.env.SERVER_CA;
+const crt = process.env.CLIENT_CERT;
+const pkey = process.env.CLIENT_KEY;
 
 connection = mysql.createConnection({
   host: '34.73.250.171',
@@ -45,13 +34,6 @@ connection.connect((err) => {
     return;
   }
 });
-
-// app.all('/*', function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
-//   res.header('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT');
-//   next();
-// });
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
