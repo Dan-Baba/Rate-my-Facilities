@@ -18,9 +18,9 @@ if (fs.existsSync('/certs/server-ca.pem')) {
   const crt = fs.readFileSync(__dirname + '/certs/client-cert.pem');
   const pkey = fs.readFileSync(__dirname + '/certs/client-key.pem');
 } else {
-  const sca = process.env.SERVER-CA;
-  const crt = process.env.CLIENT-CERT;
-  const pkey = process.env.CLIENT-KEY;
+  const sca = process.env.SERVER_CA;
+  const crt = process.env.CLIENT_CERT;
+  const pkey = process.env.CLIENT_KEY;
 }
 
 connection = mysql.createConnection({
