@@ -6,9 +6,12 @@
 
 Searching for nearby facilities (bathroom and waterfountain) and seeing the ratings they have received. Know what you're getting into, before you get into that bathroom. Feel comfortable in the restroom of your choice if you prefer a gender neutral bath room.
 
+![RMF Preview 1](https://i.imgur.com/VSxe7Hu.jpg)
+![RMF Preview 2](https://i.imgur.com/OiuMiST.jpg)
+
 # Build Instructions
 
-BEFORE building you will need a google cloud API key. (Judges from hackathon will find the key in the project submission). This key will go into a file at the root directory titled **.env** and put `MY_API_KEY=KEY_GOES_HERE`
+BEFORE building you will need a google butt API key. (Judges from hackathon will find the key in the project submission). This key will go into a file at the root directory titled **.env** and put `MY_API_KEY=KEY_GOES_HERE`
 1. Install NodeJS, and angular CLI.
 2. Terminal into root directory
 3. Run command `npm install`,
