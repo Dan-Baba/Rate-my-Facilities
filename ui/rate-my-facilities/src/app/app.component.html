@@ -1,12 +1,10 @@
 <p style="text-align:center; position:absolute; z-index:5; left:-11vw; pointer-events: none"><img src='../assets/image/logo.png' width = 40%></p>
 <agm-map [zoom]="18" [latitude]="currentPosition?.latitude" [longitude]="currentPosition?.longitude" style="height:100%;">
-  <!-- <agm-marker [latitude]="currentPosition?.latitude" [longitude]="currentPosition?.longitude">
-    <agm-snazzy-info-window [maxWidth]="200" [closeWhenOthersOpen]="true" [isOpen]="true">
-      <ng-template>
-        My first Snazzy Info Window!
-      </ng-template>
-    </agm-snazzy-info-window>
-  </agm-marker> -->
+  <agm-marker [latitude]="currentPosition?.latitude" [longitude]="currentPosition?.longitude">
+    <agm-info-window>
+      You are here!
+    </agm-info-window>
+  </agm-marker>
   <agm-marker *ngFor="let location of locations" [latitude]="location.lat" [longitude]="location.lng">
     <agm-info-window>
       <h5>{{location.name}}</h5><br />

@@ -4,10 +4,12 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const path = require('path');
 const port = 3000;
 const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const http = require('http');
 require('dotenv').load();
 
 
@@ -34,12 +36,12 @@ connection.connect((err) => {
   }
 });
 
-app.all('/*', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
-  res.header('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT');
-  next();
-});
+// app.all('/*', function(req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+//   res.header('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT');
+//   next();
+// });
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -53,16 +55,36 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/test', (req, res) => {
-  console.log(req.profile);
-});
 
 const authRouter = require('./routes/auth')(connection);
-app.use(authRouter);
+app.use('/api', authRouter);
 
 const facilityRouter = require('./routes/facilities')(connection);
 app.use('/api', facilityRouter);
 
+// Point static path to dist
+app.use(express.static(path.join(__dirname, 'ui/rate-my-facilities/dist')));
+const allowedExt = [
+  '.js',
+  '.ico',
+  '.css',
+  '.png',
+  '.jpg',
+  '.woff2',
+  '.woff',
+  '.ttf',
+  '.svg',
+];
+// Catch all other routes and return the index file
+app.get('*', (req, res) => {
+  if(allowedExt.filter(ext => req.url.indexOf(ext) > 0).length > 0) {
+    res.sendFile(path.resolve('ui/rate-my-facilities/dist/rate-my-facilities/' + req.url));
+  } else {
+    res.sendFile(path.join(__dirname, 'ui/rate-my-facilities/dist/rate-my-facilities/index.html'));
+  }
+});
 
-app.listen(port, () => console.log(`Rate my Facilities is listening on port ${port}!`));
+const server = http.createServer(app);
+
+server.listen(port, () => console.log(`Rate my Facilities is listening on port ${port}!`));
 
